@@ -22,20 +22,28 @@ Data2 <- summarize(Data1, tot_Sales = sum(Sales),
                           tot_Quantity = sum(Quantity),
                           tot_Profit = sum(Profit))
 
-#Find the 2 most profitable (Higher Profit) and consistently profitable segments (Lower COV).
+####Find the 2 most profitable (Higher Profit) and consistently profitable segments (Lower COV).####
 Data3 <- group_by(Data2, Market, Segment)
 Data4 <- summarise(Data3, mean_Profit = mean(tot_Profit),
-                          sd_Profit = sd(tot_Profit))
+                   sd_Profit = sd(tot_Profit), Profit = sum(tot_Profit))
 Data4$COV <- (Data4$sd_Profit / Data4$mean_Profit) * 100
 
-#After analysing the data, we found:
-#As per Max profit, top 2:
-#APAC Consumer 4642.0325 2934.3785 63.21323
-#EU Consumer   3930.9939 2454.1398 62.43052
+####After analysing the data, we found:####
 
-#As per Min COV, top 2:
-#EU Consumer   3930.9939 2454.1398 62.43052
-#APAC Consumer 4642.0325 2934.3785 63.21323
+arrange(Data4,desc(Profit))
+#As per Max profit, top 2:
+#Market     Segment mean_Profit sd_Profit    Profit       COV
+#<fctr>      <fctr>       <dbl>     <dbl>     <dbl>     <dbl>
+#  1   APAC    Consumer    4642.033  2934.379 222817.56  63.21323
+#2     EU    Consumer    3930.994  2454.140 188687.71  62.43052
+
+arrange(Data4,COV)
+##As per Min COV, top 2:
+#Market     Segment mean_Profit sd_Profit    Profit       COV
+#<fctr>      <fctr>       <dbl>     <dbl>     <dbl>     <dbl>
+#  1     EU    Consumer    3930.994 2454.1398 188687.71  62.43052
+#2   APAC    Consumer    4642.033 2934.3785 222817.56  63.21323
+
 
 
 #Preparing Data for APAC Consumer Sales and Demand (Quantity)
